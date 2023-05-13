@@ -1,21 +1,28 @@
 import {useState} from "react";
+import socket from "../../Socket";
+import { useSelector } from "react-redux";
+import { getUser } from "../../features/chartView/chatSlice";
 
-function SendMessage(props) {
-
+function SendMessage() {
     const [message, setMessage] = useState("");
+    let user = useSelector(getUser);
 
     function handleChange(e) {
 		setMessage(e.target.value)
 	}
 
-    function send() {
+    function sendMessage() {
         if(message) {
-            props.onSend(message);
+            const chat = {
+                sender: user,
+                text: message,
+              };
+            socket.emit('chat', chat);
             setMessage("");
         }
     }
 
-    if (props.user) {
+    if (user) {
         return (
             <div className="bg-color position-absolute bottom-0 start-0 rounded-bottom w-100 py-3">
                 <div className="input-group  container d-flex justify-content-between">     
@@ -28,7 +35,7 @@ function SendMessage(props) {
                     
                     <button type="button"
                         className="col-2 btn btn-sm btn-outline-light rounded-pill"
-                        onClick={() => send()}
+                        onClick={() => sendMessage()}
                     >
                         send
                     </button>

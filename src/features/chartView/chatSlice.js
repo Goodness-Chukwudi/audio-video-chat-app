@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   chats: [],
+  user: ""
 };
 
 export const chatSlice = createSlice({
@@ -13,17 +14,20 @@ export const chatSlice = createSlice({
 
     },
 
-    addChat: (state, action) => {
-      const chats = JSON.parse(localStorage.getItem("chats")) || []
-      chats.push(action.payload);
-      localStorage.setItem("chats", JSON.stringify(chats));
-      state.chats.push(action.payload);
+    setChats: (state, action) => {
+      state.chats = action.payload;
+    },
+
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
   },
 });
 
 export const getChats = (state) => state.chat.chats;
+export const getUser = (state) => state.chat.user;
 
-export const { addChat } = chatSlice.actions;
+export const { setChats } = chatSlice.actions;
+export const { setUser } = chatSlice.actions;
 
 export default chatSlice.reducer;

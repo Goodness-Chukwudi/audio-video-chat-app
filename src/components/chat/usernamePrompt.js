@@ -1,6 +1,12 @@
 import { useState } from "react";
+import useSocket from "../../Socket"
+import { getUser, setUser } from "../../features/chartView/chatSlice";
+import { useSelector, useDispatch } from "react-redux";
 
-function UsernamePrompt(props) {
+function UsernamePrompt() {
+    const socket = useSocket;
+    const user = useSelector(getUser);
+    const dispatch = useDispatch();
 
     const [username, setUsername] = useState("");
 
@@ -9,11 +15,14 @@ function UsernamePrompt(props) {
 	}
 
     function saveUsername() {
-        sessionStorage.setItem("username", username);
-        props.onDone(username);
+        if(username) {
+            socket.emit('user', username);
+            dispatch(setUser(username));
+            setUsername("");
+        }
     }
 
-    if (props.user) {
+    if (user) {
         return (<></>);
     } else {
         return (
